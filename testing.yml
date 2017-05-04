@@ -1,0 +1,85 @@
+---
+- name: Testing ENOS Modules
+  hosts: enos
+  gather_facts: false
+  connection: local
+
+  tasks:
+
+    - name: ENOS_command "show boot" on device
+      enos_command:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}_log.txt"
+        clicommand: "show boot"
+      tags: command
+
+    - name: ENOS_command "show running config"
+      enos_command:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}.cfg"
+        clicommand: "show run"
+      tags: shrun
+
+    - name: Multi-command test 
+      enos_multi_command:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}.multi_test.txt"
+        clicommand: "vlan 11"
+        clicommand2: "name \"multi test\""
+      tags: multi
+
+
+    - name: ENOS_command "show Tech-Support"
+      enos_command:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}.show_tech"
+        clicommand: "show tech"
+      tags: showtech
+
+    - name: ENOS_save Module
+      enos_save:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}_log.txt"
+      tags: save
+
+    - name: copy tftp using enos_command
+      enos_command:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: admin
+        deviceType: g8272_cnos
+        outputfile: "./{{ inventory_hostname }}_log.txt"
+        clicommand: "copy running-config tftp address 172.70.70.11 filename {{ inventory_hostname }}_conf.txt mgt"
+      tags: backup
+
+
+
+
+
+#    - name: Test Running Config Backup -TFTP - need to fix cnos_utility
+#      enos_backup:
+#        host: "{{ inventory_hostname }}"
+#        username: admin
+#        password: admin
+#        deviceType: g8272_cnos
+#        outputfile: "./{{ inventory_hostname }}_log.txt"
+#        configType: running-config
+#        protocol: "tftp"
+#        serverip: "172.70.70.11"
+#        rcpath: "/G8264-A-running-config.txt"
+#      tags: backup
