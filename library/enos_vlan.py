@@ -236,10 +236,15 @@ import json
 import time
 import re
 try:
-    import cnos_utility
-    HAS_LIB=True
+    from ansible.module_utils import cnos
+    HAS_LIB = True
 except:
-    HAS_LIB=False
+    HAS_LIB = False
+#try:
+#    import cnos_utility
+#    HAS_LIB=True
+#except:
+#    HAS_LIB=False
 
 #
 # load Ansible module
@@ -296,19 +301,22 @@ def  main():
     time.sleep(2)
 
     # Enable and enter configure terminal then send command
-    output = output + cnos_utility.waitForDeviceResponse("\n",">", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("\n",">", 2, remote_conn)
 
-    output = output + cnos_utility.enterEnableModeForDevice(enablePassword, 3, remote_conn)
+    output = output + cnos.enterEnableModeForDevice(enablePassword, 3, remote_conn)
 
     #Make terminal length = 0
-    output = output + cnos_utility.waitForDeviceResponse("terminal length 0\n","#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("terminal length 0\n","#", 2, remote_conn)
+
+    #Disable console prompts
+    output = output + cnos.waitForDeviceResponse("terminal dont-ask\n","#", 2, remote_conn)
 
     #Go to config mode
-    output = output + cnos_utility.waitForDeviceResponse("configure d\n","(config)#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("configure d\n","(config)#", 2, remote_conn)
 
     #Send the CLi command
-    #output = output + cnos_utility.createVlan(vlanid,vlanname,"(config)#", 2, remote_conn)
-    output = output + cnos_utility.vlanConfig(remote_conn, deviceType, "(config)#", 2, vlanArg1, vlanArg2, vlanArg3, vlanArg4, vlanArg5)
+    #output = output + cnos.createVlan(vlanid,vlanname,"(config)#", 2, remote_conn)
+    output = output + cnos.vlanConfig(remote_conn, deviceType, "(config)#", 2, vlanArg1, vlanArg2, vlanArg3, vlanArg4, vlanArg5)
 
     #Save it into the file
     file = open(outputfile, "a")
@@ -316,7 +324,7 @@ def  main():
     file.close()
 
     # need to add logic to check when changes occur or not
-    errorMsg = cnos_utility.checkOutputForError(output)
+    errorMsg = cnos.checkOutputForError(output)
     if(errorMsg == None):
         module.exit_json(changed=True, msg="VLAN configuration is accomplished ")
     else:

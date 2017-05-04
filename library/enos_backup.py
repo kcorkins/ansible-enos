@@ -189,10 +189,15 @@ import time
 import re
 import enos_utility
 try:
-    import cnos_utility
-    HAS_LIB=True
+    from ansible.module_utils import cnos
+    HAS_LIB = True
 except:
-    HAS_LIB=False
+    HAS_LIB = False
+#try:
+#    import cnos_utility
+#    HAS_LIB=True
+#except:
+#    HAS_LIB=False
 
 #
 # load Ansible module
@@ -253,12 +258,12 @@ def  main():
 
     #
     # Enable and enter configure terminal then send command
-    output = output + cnos_utility.waitForDeviceResponse("\n", ">", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("\n", ">", 2, remote_conn)
 
-    output = output + cnos_utility.enterEnableModeForDevice(enablePassword, 3, remote_conn)
+    output = output + cnos.enterEnableModeForDevice(enablePassword, 3, remote_conn)
 
     # Make terminal length = 0
-    output = output + cnos_utility.waitForDeviceResponse("terminal-length 0\n", "#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("terminal-length 0\n", "#", 2, remote_conn)
 
     # Invoke method for config transfer from server
     if(configType == 'running-config'):
@@ -286,7 +291,7 @@ def  main():
     file.close()
 
     # Logic to check when changes occur or not
-    errorMsg = cnos_utility.checkOutputForError(output)
+    errorMsg = cnos.checkOutputForError(output)
     if(errorMsg == None):
         module.exit_json(changed=True, msg="Config file tranferred to server")
     else:

@@ -122,11 +122,15 @@ import json
 import time
 import re
 try:
-    import cnos_utility
-    HAS_LIB=True
+    from ansible.module_utils import cnos
+    HAS_LIB = True
 except:
-    HAS_LIB=False
-
+    HAS_LIB = False
+#try:
+#    import cnos_utility
+#    HAS_LIB=True
+#except:
+#    HAS_LIB=False
 #
 # load Ansible module
 #
@@ -172,23 +176,26 @@ def  main():
     time.sleep(2)
 
     # Enable and enter configure terminal then send command
-    output = output + cnos_utility.waitForDeviceResponse("\n",">", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("\n",">", 2, remote_conn)
 
-    output = output + cnos_utility.enterEnableModeForDevice(enablePassword, 3, remote_conn)
+    output = output + cnos.enterEnableModeForDevice(enablePassword, 3, remote_conn)
 
     #Make terminal length = 0
-    output = output + cnos_utility.waitForDeviceResponse("terminal-length 0\n","#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("terminal-length 0\n","#", 2, remote_conn)
 
-    #cnos_utility.debugOutput(cliCommand)
+    #Disable console prompts
+    output = output + cnos.waitForDeviceResponse("terminal dont-ask\n","#", 2, remote_conn)
+    
+    #cnos.debugOutput(cliCommand)
     #Send the CLi command
-    output = output + cnos_utility.waitForDeviceResponse(cliCommand,"#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse(cliCommand,"#", 2, remote_conn)
 
     #Save it into the file
     file = open(outputfile, "a")
     file.write(output)
     file.close()
 
-    errorMsg = cnos_utility.checkOutputForError(output)
+    errorMsg = cnos.checkOutputForError(output)
     if(errorMsg == None):
         module.exit_json(changed=True, msg="Switch Running Config is Saved to Startup Config ")
     else:
