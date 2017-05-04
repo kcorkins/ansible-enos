@@ -71,15 +71,3 @@
 
 
 
-#    - name: Test Running Config Backup -TFTP - need to fix cnos_utility
-#      enos_backup:
-#        host: "{{ inventory_hostname }}"
-#        username: admin
-#        password: admin
-#        deviceType: g8272_cnos
-#        outputfile: "./{{ inventory_hostname }}_log.txt"
-#        configType: running-config
-#        protocol: "tftp"
-#        serverip: "172.70.70.11"
-#        rcpath: "/G8264-A-running-config.txt"
-#      tags: backup
