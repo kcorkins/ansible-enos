@@ -188,10 +188,14 @@ def  main():
     output = output + cnos.waitForDeviceResponse("terminal dont-ask\n","#", 2, remote_conn)
 
     #Go to config mode
-    output = output + cnos.waitForDeviceResponse("configure t\n","(config)#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse("configure t\n","#", 2, remote_conn)
 
     #Send the CLi command
-    output = output + cnos.waitForDeviceResponse(cliCommand +"\n","(config)#", 2, remote_conn)
+    output = output + cnos.waitForDeviceResponse(cliCommand +"\n","#", 2, remote_conn)
+
+    # End config mode
+    output = output + cnos.waitForDeviceResponse("end\n","#", 2, remote_conn)
+
 
     #Save it into the file
     file = open(outputfile, "a")
