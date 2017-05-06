@@ -149,7 +149,8 @@ def  main():
             username=dict(required=True),
             password=dict(required=True, no_log=True),
             enablePassword=dict(required=False, no_log=True),
-            deviceType=dict(required=True),),
+            #deviceType=dict(required=True),),
+            deviceType=dict(required=False),),
         supports_check_mode=False)
 
     username = module.params['username']
@@ -158,7 +159,8 @@ def  main():
     cliCommand= "write memory \n"
     outputfile =  module.params['outputfile']
     hostIP = module.params['host']
-    deviceType = module.params['deviceType']
+    #deviceType = module.params['deviceType']
+    deviceType = "g8272_cnos"
     output = ""
 
     # Create instance of SSHClient object
@@ -185,7 +187,7 @@ def  main():
 
     #Disable console prompts
     output = output + cnos.waitForDeviceResponse("terminal dont-ask\n","#", 2, remote_conn)
-    
+
     #cnos.debugOutput(cliCommand)
     #Send the CLi command
     output = output + cnos.waitForDeviceResponse(cliCommand,"#", 2, remote_conn)
