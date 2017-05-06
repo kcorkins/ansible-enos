@@ -147,7 +147,8 @@ def  main():
             clicommand=dict(required=True),
             outputfile=dict(required=True),
             host=dict(required=True),
-            deviceType=dict(required=True),
+            # deviceType=dict(required=True),
+            deviceType=dict(required=False),
             username=dict(required=True),
             password=dict(required=True, no_log=True),
             enablePassword=dict(required=False, no_log=True),),
@@ -157,7 +158,8 @@ def  main():
     password = module.params['password']
     enablePassword = module.params['enablePassword']
     cliCommand= module.params['clicommand']
-    deviceType = module.params['deviceType']
+    # deviceType = module.params['deviceType']
+    deviceType = "g8272_cnos" 
     outputfile =  module.params['outputfile']
     hostIP = module.params['host']
     output = ""
