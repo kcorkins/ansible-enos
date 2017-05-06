@@ -5,7 +5,7 @@
   connection: local
   vars:
     timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d-%T') }}"
-     
+
   tasks:
 
     - name: ENOS_command "show boot" on device
@@ -13,7 +13,6 @@
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}_log.txt"
         clicommand: "show boot"
       tags: command
@@ -23,17 +22,15 @@
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}.{{ timestamp }}.cfg"
         clicommand: "show run"
       tags: shrun
 
-    - name: Multi-command test 
+    - name: Multi-command test
       enos_multi_command:
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}.multi_test.txt"
         clicommand: "vlan 11"
         clicommand2: "name \"multi test\""
@@ -45,25 +42,23 @@
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}.dump.txt"
         clicommand: "show tech"
       ignore_errors: True
       tags: showtech
               ###
               # Tech-support dump fails because  library module searches output
-              # for words; “error”, “invalid”, “incorrect” or “failure”. 
+              # for words; “error”, “invalid”, “incorrect” or “failure”.
               # The word "error" is included in the interface counter information
               # so the module flags a failure. Tail the end of the file to ensure
               # the tech-support information was stored.
-              ### 
+              ###
 
     - name: ENOS_save Module
       enos_save:
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}_log.txt"
       tags: save
 
@@ -72,12 +67,6 @@
         host: "{{ inventory_hostname }}"
         username: admin
         password: admin
-        deviceType: g8272_cnos
         outputfile: "./results/{{ inventory_hostname }}_log.txt"
         clicommand: "copy running-config tftp address 172.70.70.11 filename {{ inventory_hostname }}_conf.txt mgt"
       tags: backup
-
-
-
-
-
