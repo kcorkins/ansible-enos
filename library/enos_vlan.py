@@ -68,13 +68,6 @@ description:
         required: false
         default: 
         choices: []
-    deviceType:
-        description:
-            - This specifies the type of device against which the image is downloaded. The value has to come from inventory file ideally,
-            - you can even enter it as variable.
-        required: Yes
-        default: null
-        choices: []
     vlanArg1:
         description:
             - This is an overloaded vlan first argument. Usage of these overloaded variables are described in the table below.
