@@ -15,11 +15,11 @@
 DOCUMENTATION = '''
 ---
 version_added: "1.7"
-module: cnos_command
-short_description: Run a single CNOS Command on Devices.
+module: enos_multi_command
+short_description: Run two ENOS Commands on Devices.
 description:
     - Manages network device configurations over SSH. This module allows implementors to work with the device
-    running-config. It provides a way to push a CNOS command onto a network device by evaluating the current
+    running-config. It provides a way to push two ENOS command onto a network device by evaluating the current
     running-config and only pushing configuration commands that are not already configured. The command is
     passed as an argument to the method
 options:
@@ -31,6 +31,14 @@ options:
         required: true
         default: null
         choices: []
+    clicommand2:
+        description:
+            - Specify the second CLI command as an attribute to this method. Pass on the command in double quotes.
+            The variables can also be placed directly on to CLIs or can come from the vars folder.
+        required: false
+        default: null
+        choices: []
+
     outputfile:
         description:
             - This specifies the file path to which the output of each command excection is persisted.
@@ -76,14 +84,14 @@ options:
         description:
             - This specifies the type of device against which the image is downloaded. The value has to come from inventory file ideally,
             - you can even enter it as variable.
-        required: Yes
-        default: null
+        required: No
+        default: g8272_cnos (hardcoded)
         choices: []
 notes:
     - For help in developing on modules, should you be so inclined, please read
     Community Information & Contributing, Helping Testing PRs and Developing Modules.
     Module Dependency :
-    1. cnos_command.py
+    1. enos_multi_command.py
     2. cnos_utility.py
 '''
 EXAMPLES = '''
@@ -91,18 +99,18 @@ Inside tasks/main.yml
 ---
 - name: Test Command
   cnos_command: host={{ inventory_hostname }}  username={{ hostvars[inventory_hostname]['username']}}
-  password={{ hostvars[inventory_hostname]['password']}} deviceType={{ hostvars[inventory_hostname]['deviceType']}}
+  password={{ hostvars[inventory_hostname]['password']}} deviceType={{ hostvars[inventory_hostname]}}
   clicommand='{{item.clicommand}}' enablePassword='{{item.enablePassword}}'
   outputfile=./results/cnos_command_{{ inventory_hostname }}_output.txt
   with_items: "{{test_runcommand_data1}}"
 Inside vars/main.yml
 ---
 test_runcommand_data1:
-  - {enablePassword: "anil", clicommand: "display users"}
+  - {enablePassword: "admin", clicommand: "display users"}
 
 In the inventory file u specify as
 [cnos_command_sample]
-10.240.178.74  username=<username> password=<password> deviceType=g8272_cnos
+10.240.178.74  username=<username> password=<password>
 '''
 
 RETURN = '''
